@@ -221,7 +221,7 @@ function App() {
               <label htmlFor='grade' className='text-sm font-bold md:text-lg'>Marks<br/>Scored</label>
                 <input required id="grade" name={item.id + ",grade"} autoComplete="off" onChange={handleInput} value={inputValues[item.id].grade} type="text" className='p-2 border border-teal-500 w-full rounded md:h-12 md:text-xl' /> 
               </div>
-              <div className='w-[25%] md:mt-5'>
+              <div className='w-[25%] mt-5 md:mt-5'>
                 <label htmlFor='aggregate' className='text-sm font-bold md:text-lg'>Aggregate</label>
                 <p id={item.id} name={item.id + ",aggregate"} onChange={handleInput} className={`text-4xl md:text-5xl font-bold w-full mt-1 md:mt-3 ${inputValues[item.id].aggregate.color}`}>{inputValues[item.id].aggregate.value}</p>
               </div>
