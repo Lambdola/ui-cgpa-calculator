@@ -4,7 +4,6 @@ import CgpaModal from "./components/CgpaModal";
 import InputCourseCodeTrue from "./components/InputCourseCodeTrue";
 import InputCourseCodeFalse from "./components/InputCourseCodeFalse";
 
-
 function App() {
   const [number, setNumber] = useState(0);
   const [codeState, setCodeState] = useState(true);
@@ -35,7 +34,6 @@ function App() {
     }
     setInputValues(arr);
   }
-  
 
   function evaluateGrade(name, val) {
     let ele = document.getElementById(name);
@@ -152,7 +150,7 @@ function App() {
     cgpa = cgpa.toFixed(2);
     let text, degreeClass, rank;
     if (cgpa >= 3.5) {
-      text = "Iwe !!! \nKeep soaring high. The sky is the limit.\nBGS incoming";
+      text = `Iwe !!! Keep soaring high. The sky is the limit.\nBGS incoming`;
       degreeClass = "First Class Honours";
       rank = "";
     } else if (cgpa >= 3.0) {
@@ -199,22 +197,28 @@ function App() {
         <p className="text-2xl font-bold font-sans text-center md:text-4xl md:mt-7">
           UNIVERSITY OF IBADAN
         </p>
-        <p className="text-center md:text-lg font-medium md:mt-1 xl:text-2xl">
+        <p className="text-center leading-normal md:text-lg font-medium md:mt-1 xl:text-2xl">
           A University of Ibadan standard C.G.P.A calculator using a scale of
           4.0
         </p>
-        <p className="text-center text-slate-600">( Per semester/session calculator )</p>
+        <p className="text-center text-slate-700 italic">
+          ( per semester/session CGPA calculator )
+        </p>
 
-        <div className="text-left my-2 md:text-center md:mt-7">
-          <input
-            type="checkbox"
-            defaultChecked={true}
-            onClick={() => setCodeState(!codeState)}
-            className="w-5 h-5 border md:h-6 md:w-6"
-          />
-          <span className="font-semibold text-lg ml-3 md:text-2xl">
+        <div className="flex items-center my-2 md:text-center md:mt-7">
+          {/* controls the "input course code" checkbox */}
+          <div className="bg-red-40 w-7 flex items-center justify-center">
+            <input
+              type="checkbox"
+              defaultChecked={true}
+              onClick={() => setCodeState(!codeState)}
+              className="w-5 h-5 border  md:h-6 md:w-6"
+            />
+          </div>
+
+          <p className="font-semibold bg-red-30 text-lg ml-3 md:text-2xl">
             Input Course Code
-          </span>
+          </p>
         </div>
 
         <div className="md:w-[50%] md:mx-auto bg-red-20">
@@ -244,8 +248,10 @@ function App() {
               />
             );
           })}
+
+          {/* only show the "calculate CGPA button" if there are rendered fields */}
           {inputValues.length !== 0 && (
-            <div className="bg-red-30 w-40 mx-auto">
+            <div className="bg-red-30 rounded-xl w-40 mx-auto">
               <button
                 type="submit"
                 className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-20 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700"

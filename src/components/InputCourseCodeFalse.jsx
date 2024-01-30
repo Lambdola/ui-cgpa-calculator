@@ -2,7 +2,7 @@ import React from 'react'
 
 function InputCourseCodeFalse({item, handleInput, inputValues}) {
   return (
-    <div key={item.id + "2"} className='relative flex w-full justify-between bg-red-20 even:bg-[rgba(185,170,170,0.25)] p-3'>
+    <div key={item.id + "2"} className='relative flex w-full justify-between bg-red-20 even:bg-[rgba(185,170,170,0.25)] p-3 rounded-lg'>
         <p className='font-bold text-lg w-[5%] md:text-lg'>{item.id + 1}.</p>
         <div className='w-[25%] space-y-2'>
             <label htmlFor='unit' className='text-sm font-bold md:text-lg'>Course<br/>Unit</label>
