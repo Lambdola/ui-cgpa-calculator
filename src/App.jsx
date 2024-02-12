@@ -134,6 +134,7 @@ function App() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    window.scrollTo(0, 0);
     let total_units = 0;
     let gpa = 0;
     for (let items of inputValues) {
