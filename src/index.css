@@ -24,3 +24,18 @@ body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+.slide-in-left {
+  animation: slideInLeft .2s ease-in;
+  transition: all .5s ease-in;
+}
+
+@keyframes slideInLeft {
+  from {
+    right: -50%;
+    opacity: 0;
+  }
+  to {
+    right: 0px;
+  }
+}

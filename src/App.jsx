@@ -3,11 +3,14 @@ import ui_logo from "./images/ui_logo.jpg";
 import CgpaModal from "./components/CgpaModal";
 import InputCourseCodeTrue from "./components/InputCourseCodeTrue";
 import InputCourseCodeFalse from "./components/InputCourseCodeFalse";
+import Header from "./components/Header";
+import ResultsHistory from "./components/ResultsHistory";
 
 function App() {
   const [number, setNumber] = useState(0);
   const [codeState, setCodeState] = useState(true);
   const [inputValues, setInputValues] = useState([]);
+  const [sideNav, setSideNav] = useState(false)
   const [cgpaState, setCgpaState] = useState({
     cgpa: 0,
     degreeClass: "",
@@ -171,6 +174,21 @@ function App() {
       degreeClass = " --- ";
       rank = "";
     }
+
+    // alert(JSON.stringify(inputValues))
+    let results = localStorage.getItem("CGPA")
+    let resultsArrHistory;
+    if (results) {
+      results = JSON.parse(results)
+      resultsArrHistory = [...results, [cgpa, inputValues] ]
+      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory) )
+    } else {
+      // alert("no")
+      resultsArrHistory = [ [cgpa, inputValues] ]
+      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory) )
+    }
+
+
     setCgpaState({
       ...cgpaState,
       cgpa: cgpa,
@@ -181,12 +199,36 @@ function App() {
     });
   }
 
+  function handleAddMoreCourses() {
+    let copyArr = [...inputValues];
+    copyArr.push({
+      id: inputValues.length,
+      code: "",
+      unit: "",
+      grade: "",
+      aggregate: {
+        value: "",
+        color: "",
+      },
+    });
+    setInputValues(copyArr);
+  }
+
+  function deleteInput(id) {
+    alert(id)
+    let filterValues = inputValues.filter(items => items.id !== id)
+    alert(JSON.stringify(filterValues))
+    setInputValues(filterValues)
+  }
+
   return (
-    <div>
+    <div className="relative">
+      <Header setSideNav={setSideNav} />
+      {sideNav && <ResultsHistory setSideNav={setSideNav} setInputValues={setInputValues} /> }
       {cgpaState.state && (
         <CgpaModal cgpaState={cgpaState} setCgpaState={setCgpaState} />
       )}
-      <div className="relative bg-yellow-30 p-3">
+      <div className="relative bg-yellow-30 p-3 pt-16">
         {/* transparent background UI logo */}
         <div className="opacity-10 -z-10 w-[80%] right-[10%] mx-auto bg-red-50 fixed top-[30vh] md:w-[60%] xl:w-[40%] md:right-[20%] xl:right-[30%] md:h-[50vh] xl:h-[70vh] md:top-[40vh] xl:top-[20vh] ">
           <img src={ui_logo} className="w-full h-full object-cover" />
@@ -227,6 +269,7 @@ function App() {
             onChange={handleInputRender}
             type="number"
             placeholder="Total number of courses"
+            autoFocus
             className="w-[80%] p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] font-medium placeholder:text-base md:placeholder:text-xl md:w-full md:h-12 "
           />
         </div>
@@ -234,21 +277,53 @@ function App() {
           onSubmit={handleSubmit}
           className="space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
         >
+           {inputValues.length !== 0 && (
+            <button type="button" onClick={handleAddMoreCourses}>
+              <div className="flex items-center gap-1">
+                <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
+                  <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
+                    +
+                  </p>
+                </div>
+                <p className="text-sm text-blue-500 font-bold">
+                  Add more course(s){" "}
+                </p>
+              </div>
+            </button>
+          )}
           {inputValues.map((item) => {
             return codeState ? (
               <InputCourseCodeTrue
+              // key={item.id}
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
+                deleteInput={deleteInput}
               />
             ) : (
               <InputCourseCodeFalse
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
+                setInputValues={setInputValues}
               />
             );
           })}
+
+          {inputValues.length !== 0 && (
+            <button type="button" onClick={handleAddMoreCourses}>
+              <div className="flex items-center gap-1">
+                <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
+                  <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
+                    +
+                  </p>
+                </div>
+                <p className="text-sm text-blue-500 font-bold">
+                  Add more course(s){" "}
+                </p>
+              </div>
+            </button>
+          )}
 
           {/* only show the "calculate CGPA button" if there are rendered fields */}
           {inputValues.length !== 0 && (
