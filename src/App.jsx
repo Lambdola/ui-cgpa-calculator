@@ -10,7 +10,7 @@ function App() {
   const [number, setNumber] = useState(0);
   const [codeState, setCodeState] = useState(true);
   const [inputValues, setInputValues] = useState([]);
-  const [sideNav, setSideNav] = useState(false)
+  const [sideNav, setSideNav] = useState(false);
   const [cgpaState, setCgpaState] = useState({
     cgpa: 0,
     degreeClass: "",
@@ -36,6 +36,7 @@ function App() {
       };
     }
     setInputValues(arr);
+    // e.target.value = ""
   }
 
   function evaluateGrade(name, val) {
@@ -176,18 +177,17 @@ function App() {
     }
 
     // alert(JSON.stringify(inputValues))
-    let results = localStorage.getItem("CGPA")
+    let results = localStorage.getItem("CGPA");
     let resultsArrHistory;
     if (results) {
-      results = JSON.parse(results)
-      resultsArrHistory = [...results, [cgpa, inputValues] ]
-      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory) )
+      results = JSON.parse(results);
+      resultsArrHistory = [...results, [cgpa, inputValues]];
+      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory));
     } else {
       // alert("no")
-      resultsArrHistory = [ [cgpa, inputValues] ]
-      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory) )
+      resultsArrHistory = [[cgpa, inputValues]];
+      localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory));
     }
-
 
     setCgpaState({
       ...cgpaState,
@@ -215,16 +215,21 @@ function App() {
   }
 
   function deleteInput(id) {
-    alert(id)
-    let filterValues = inputValues.filter(items => items.id !== id)
-    alert(JSON.stringify(filterValues))
-    setInputValues(filterValues)
+    alert(id);
+    let filterValues = inputValues.filter((items) => items.id !== id);
+    alert(JSON.stringify(filterValues));
+    setInputValues(filterValues);
   }
 
   return (
     <div className="relative">
       <Header setSideNav={setSideNav} />
-      {sideNav && <ResultsHistory setSideNav={setSideNav} setInputValues={setInputValues} /> }
+      {sideNav && (
+        <ResultsHistory
+          setSideNav={setSideNav}
+          setInputValues={setInputValues}
+        />
+      )}
       {cgpaState.state && (
         <CgpaModal cgpaState={cgpaState} setCgpaState={setCgpaState} />
       )}
@@ -234,19 +239,23 @@ function App() {
           <img src={ui_logo} className="w-full h-full object-cover" />
         </div>
 
-        <div className="mb-5 w-20 h-20 mx-auto text-center md:w-28 md:h-28 xl:w-32 xl:h-32">
-          <img src={ui_logo} />
+        <div className="flex items-center border-b border-slate-400 py-2 bg-red-30">
+          <div className="w-[20%] h-20 flex items-center justify-center text-center md:w-28 md:h-28 xl:w-32 xl:h-32 bg-red-700 ">
+            <img src={ui_logo} />
+          </div>
+          <div className="bg-red-80 w-[80%]">
+            <p className="text-lg font-bold font-sans text-center md:text-4xl md:mt-7">
+              UNIVERSITY OF IBADAN
+            </p>
+            <p className="text-center text-slate-400 text-sm leading-normal md:text-lg md:mt-1 xl:text-2xl">
+              A University of Ibadan standard C.G.P.A calculator using a scale
+              of 4.0
+            </p>
+            <p className="text-center text-sm text-slate-700 italic">
+              ( per semester/session CGPA calculator )
+            </p>
+          </div>
         </div>
-        <p className="text-2xl font-bold font-sans text-center md:text-4xl md:mt-7">
-          UNIVERSITY OF IBADAN
-        </p>
-        <p className="text-center leading-normal md:text-lg font-medium md:mt-1 xl:text-2xl">
-          A University of Ibadan standard C.G.P.A calculator using a scale of
-          4.0
-        </p>
-        <p className="text-center text-slate-700 italic">
-          ( per semester/session CGPA calculator )
-        </p>
 
         <div className="flex items-center my-2 md:text-center md:mt-7">
           {/* controls the "input course code" checkbox */}
@@ -277,24 +286,10 @@ function App() {
           onSubmit={handleSubmit}
           className="space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
         >
-           {inputValues.length !== 0 && (
-            <button type="button" onClick={handleAddMoreCourses}>
-              <div className="flex items-center gap-1">
-                <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
-                  <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
-                    +
-                  </p>
-                </div>
-                <p className="text-sm text-blue-500 font-bold">
-                  Add more course(s){" "}
-                </p>
-              </div>
-            </button>
-          )}
           {inputValues.map((item) => {
             return codeState ? (
               <InputCourseCodeTrue
-              // key={item.id}
+                // key={item.id}
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
@@ -319,7 +314,7 @@ function App() {
                   </p>
                 </div>
                 <p className="text-sm text-blue-500 font-bold">
-                  Add more course(s){" "}
+                  Add another course
                 </p>
               </div>
             </button>

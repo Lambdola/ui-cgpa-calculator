@@ -12,8 +12,8 @@ function Header({setSideNav}) {
             </div>
             
         </div>
-        <div onClick={() => {window.location.reload()}} className="font-mono font-bold text-lg cursor-pointer"><p>CGPA-Wizard 1.0</p></div>
-        <div className="h-10 w-10 bg-yellow-300 rounded-full"></div>
+        <div onClick={() => {window.location.reload()}} className="font-mono font-bold text-base cursor-pointer"><p>UI CGPA Calculator</p></div>
+        <div className="h-10 w-10 bg-transparent rounded-full"></div>
       </div>
     </div>
   );
