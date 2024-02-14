@@ -25,7 +25,7 @@ function ResultsHistory({ setSideNav, setInputValues }) {
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="absolute w-60 h-full bg-white overflow-scroll"
+        className="absolute w-60 xl:w-1/3 h-full bg-white overflow-scroll"
       >
         <button
           onClick={() => window.location.reload()}
@@ -37,12 +37,21 @@ function ResultsHistory({ setSideNav, setInputValues }) {
 
         <div className="p-3 space-y-2">
           <div className="flex justify-between items-center">
-          <p className="text-sm font-medium">CGPA Results History</p>
-          {results && <button onClick={() => {localStorage.removeItem("CGPA"); setResults("")}} className="text-red-200 text-xs font-bold bg-red-700 hover:text-red-700 hover:bg-white py-1 px-2 rounded-md">X Clear</button> }
-
+            <p className="text-sm font-medium">CGPA Results History</p>
+            {results && (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("CGPA");
+                  setResults("");
+                }}
+                className="text-red-200 text-xs font-bold bg-red-700 hover:text-red-700 hover:bg-white py-1 px-2 rounded-md"
+              >
+                X Clear
+              </button>
+            )}
           </div>
-            
-          {results ?
+
+          {results ? (
             results.map((items) => {
               return (
                 <div
@@ -51,10 +60,15 @@ function ResultsHistory({ setSideNav, setInputValues }) {
                     setInputValues(items[1]);
                   }}
                 >
-                  <button className="p-2 bg-slate-800 hover:bg-slate-400 w-full text-left rounded-md text-white">{items[0]}</button>
+                  <button className="p-2 bg-slate-800 hover:bg-slate-400 w-full text-left rounded-md text-white">
+                    {items[0]}
+                  </button>
                 </div>
               );
-            }) : <p className="text-slate-400">No results</p>}
+            })
+          ) : (
+            <p className="text-slate-400">No results</p>
+          )}
         </div>
       </div>
     </div>

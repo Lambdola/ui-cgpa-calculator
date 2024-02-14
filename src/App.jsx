@@ -239,52 +239,109 @@ function App() {
           <img src={ui_logo} className="w-full h-full object-cover" />
         </div>
 
-        <div className="flex items-center border-b border-slate-400 py-2 bg-red-30">
-          <div className="w-[20%] h-20 flex items-center justify-center text-center md:w-28 md:h-28 xl:w-32 xl:h-32 bg-red-700 ">
-            <img src={ui_logo} />
+        <div className="flex items-center xl:justify-center border-b border-slate-400 py-2 bg-red-30">
+          <div className="w-[20%] h-20 flex items-center justify-center text-center md:w-28 md:h-28 xl:w-32 xl:h-32 bg-red-70 ">
+            <img src={ui_logo} className="xl:h-28 xl:aspect-squar xl:object-cover" />
           </div>
-          <div className="bg-red-80 w-[80%]">
-            <p className="text-lg font-bold font-sans text-center md:text-4xl md:mt-7">
+          <div className="bg-red-80 w-[80%] xl:text-left">
+            <p className="text-lg font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
               UNIVERSITY OF IBADAN
             </p>
-            <p className="text-center text-slate-400 text-sm leading-normal md:text-lg md:mt-1 xl:text-2xl">
+            <p className="text-center text-slate-400 text-sm leading-normal md:text-lg md:mt-1 xl:text-2xl xl:text-left">
               A University of Ibadan standard C.G.P.A calculator using a scale
               of 4.0
             </p>
-            <p className="text-center text-sm text-slate-700 italic">
+            <p className="text-center text-sm text-slate-700 italic xl:text-left">
               ( per semester/session CGPA calculator )
             </p>
           </div>
         </div>
 
-        <div className="flex items-center my-2 md:text-center md:mt-7">
-          {/* controls the "input course code" checkbox */}
-          <div className="bg-red-40 w-7 flex items-center justify-center">
-            <input
-              type="checkbox"
-              defaultChecked={true}
-              onClick={() => setCodeState(!codeState)}
-              className="w-5 h-5 border  md:h-6 md:w-6"
-            />
+        <div className="flex">
+        <div className="xl:flex xl:flex-col xl:items-start bg-red-40 xl:w-[30%]">
+          <div className="flex items-center my-2 md:text-center md:mt-7">
+            {/* controls the "input course code" checkbox */}
+            <div className="bg-red-40 w-7 flex items-center justify-center">
+              <input
+                type="checkbox"
+                defaultChecked={true}
+                onClick={() => setCodeState(!codeState)}
+                className="w-5 h-5 border  md:h-6 md:w-6"
+              />
+            </div>
+
+            <p className="font-semibold bg-red-30 text-lg ml-3 md:text-2xl">
+              Input Course Code
+            </p>
           </div>
 
-          <p className="font-semibold bg-red-30 text-lg ml-3 md:text-2xl">
-            Input Course Code
-          </p>
-        </div>
-
-        <div className="md:w-[50%] md:mx-auto bg-red-20">
-          <input
-            onChange={handleInputRender}
-            type="number"
-            placeholder="Total number of courses"
-            autoFocus
-            className="w-[80%] p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] font-medium placeholder:text-base md:placeholder:text-xl md:w-full md:h-12 "
-          />
+          <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80">
+            <input
+              onChange={handleInputRender}
+              type="number"
+              placeholder="Total number of courses"
+              autoFocus
+              className="w-[80%] p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] font-medium placeholder:text-base md:placeholder:text-xl md:w-full md:h-12 "
+            />
+          </div>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
+          className="hidden xl:block xl:w-[70%] xl:h-screen xl:overflow-scroll space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
+        >
+          {inputValues.map((item) => {
+            return codeState ? (
+              <InputCourseCodeTrue
+                // key={item.id}
+                item={item}
+                handleInput={handleInput}
+                inputValues={inputValues}
+                deleteInput={deleteInput}
+              />
+            ) : (
+              <InputCourseCodeFalse
+                item={item}
+                handleInput={handleInput}
+                inputValues={inputValues}
+                setInputValues={setInputValues}
+              />
+            );
+          })}
+
+          {inputValues.length !== 0 && (
+            <button type="button" onClick={handleAddMoreCourses}>
+              <div className="flex items-center gap-1">
+                <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
+                  <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
+                    +
+                  </p>
+                </div>
+                <p className="text-sm xl:text-xl text-blue-500 font-bold">
+                  Add another course
+                </p>
+              </div>
+            </button>
+          )}
+
+          {/* only show the "calculate CGPA button" if there are rendered fields */}
+          {inputValues.length !== 0 && (
+            <div className="bg-red-30 rounded-xl w-40 xl:w-full mx-auto">
+              <button
+                type="submit"
+                className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-16 xl:mt-5 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700"
+              >
+                Calculate CGPA
+              </button>
+            </div>
+          )}
+        </form>
+
+        </div>
+       
+
+        <form
+          onSubmit={handleSubmit}
+          className="xl:hidden space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
         >
           {inputValues.map((item) => {
             return codeState ? (
@@ -320,9 +377,9 @@ function App() {
             </button>
           )}
 
-          {/* only show the "calculate CGPA button" if there are rendered fields */}
+          {/* only show the "calculate CGPA button" if there are rendered course fields */}
           {inputValues.length !== 0 && (
-            <div className="bg-red-30 rounded-xl w-40 mx-auto">
+            <div className="bg-red-800 rounded-xl w-40 xl:w-80 mx-auto">
               <button
                 type="submit"
                 className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-20 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700"
