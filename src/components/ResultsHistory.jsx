@@ -32,12 +32,12 @@ function ResultsHistory({ setSideNav, setInputValues }) {
           className="flex items-center gap-2 w-full my-5 mx-2"
         >
           <div className="h-7 w-7 bg-slate-300 rounded-full"></div>
-          <p className="text-sm font-semibold">New CGPA Calculation</p>
+          <p className="text-sm font-semibold">New CGPA Computation</p>
         </button>
 
         <div className="p-3 space-y-2">
           <div className="flex justify-between items-center">
-            <p className="text-sm xl:text-base font-medium">CGPA Results History</p>
+            <p className="text-sm xl:text-base font-medium">CGPA Result History</p>
             {results && (
               <button
                 onClick={() => {
