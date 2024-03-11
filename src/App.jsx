@@ -114,7 +114,7 @@ function App() {
       }
 
       // check and handle if the value of the "unit" input is no less than 1 or greater than 4
-      if (itemValue === "unit" && (val < 1 || val > 4)) {
+      if (itemValue === "unit" && (val < 1 || val > 6)) {
         return "Invalid Input";
       }
     }
@@ -263,7 +263,7 @@ function App() {
             </p>
           </div>
           <div className="w-full space-y-1 mt-1">
-            <p className="text-sm text-center text-slate-700">Designed & Developed by <a href="https://olalekan-oladimeji-portfolio.vercel.app" className="text-blue-700 underline underline-offset-4 hover:text-red-400">Olalekan Oladimeji </a> </p>
+            <p className="text-sm text-center text-slate-500">Designed & Developed by <a href="https://olalekan-oladimeji-portfolio.vercel.app" target="_blank" className="text-blue-700 underline underline-offset-4 hover:text-red-400">Olalekan Oladimeji </a> </p>
             <p className="text-sm text-center text-slate-600"><span>&#169; {new Date().getFullYear()}. </span> All Rights Reserved.</p>
           </div>
         </div>
