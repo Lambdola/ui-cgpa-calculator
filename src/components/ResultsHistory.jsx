@@ -9,9 +9,7 @@ function ResultsHistory({ setSideNav, setInputValues }) {
       history = JSON.parse(history);
       setResults(history);
     }
-    // alert(JSON.stringify(history));
-    // alert( typeof history)
-    // alert(history.length)
+   
   }, []);
 
   return (
@@ -37,7 +35,7 @@ function ResultsHistory({ setSideNav, setInputValues }) {
 
         <div className="p-3 space-y-2">
           <div className="flex justify-between items-center">
-            <p className="text-sm xl:text-base font-medium">CGPA Results History</p>
+            <p className="text-sm xl:text-base font-medium object-cover">CGPA Results History</p>
             {results && (
               <button
                 onClick={() => {

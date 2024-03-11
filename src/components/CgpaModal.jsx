@@ -30,6 +30,33 @@ function CgpaModal({ cgpaState, setCgpaState }) {
           </div>
         </div>
       </div>
+
+
+
+      {/* <div className="relative mt-20 w-96 mx-auto bg-slate-50 z-20 py-3 rounded-xl">
+        <div className="flex justify-between w-96 bg-slate-50">
+          <div className="w-[50%] bg-red-90 flex items-center">
+            <div className="h-[90%] bg-yellow-40">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7seHpPaIGmwQsgqU9oazIjO4t-x6uvH5WGA&usqp=CAU" className="h-full w-full object-fill rounded-t-xl" />
+            </div>
+          </div>
+          <div className="w-1/2 px-3 space-y-2">
+            <p className="text-sm font-serif">P E R F U M E</p>
+            <p className="font-serif font-bold text-xl">Gabrielle Essence Eau De Parfum</p>
+            <p className="text-xs text-slate-500 font-serif">A floral, solar, and voluptous interpretation composed by Olivier Polge, Perfumer-Creator for the house of CHANEL</p>
+            <div className="flex items-center gap-4">
+              <p className="text-xl text-green-400 font-mono">$149.99</p>
+              <div className="relative">
+                <p className="text-[10px]">$169.99</p>
+              </div>
+            </div>
+            <div className="w-[80%] mx-auto bg-red-40">
+              <button className="text-center w-full bg-green-500 p-1 rounded-md">Add to Cart</button>
+
+            </div>
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 }

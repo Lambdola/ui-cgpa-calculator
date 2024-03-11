@@ -223,23 +223,30 @@ function App() {
 
   return (
     <div className="relative">
+
       <Header setSideNav={setSideNav} />
+
+      {/* side nav results history panel */}
       {sideNav && (
         <ResultsHistory
           setSideNav={setSideNav}
           setInputValues={setInputValues}
         />
       )}
+
+      {/* CGPA modal score popup */}
       {cgpaState.state && (
         <CgpaModal cgpaState={cgpaState} setCgpaState={setCgpaState} />
       )}
+
+      {/* main code body */}
       <div className="relative bg-yellow-30 p-3 pt-16">
         {/* transparent background UI logo */}
         <div className="opacity-10 -z-10 w-[80%] right-[10%] mx-auto bg-red-50 fixed top-[30vh] md:w-[60%] xl:w-[40%] md:right-[20%] xl:right-[30%] md:h-[50vh] xl:h-[70vh] md:top-[40vh] xl:top-[20vh] ">
           <img src={ui_logo} className="w-full h-full object-cover" />
         </div>
 
-        <div className="flex items-center xl:justify-center border-b border-slate-400 py-2 bg-red-30">
+        <div className="flex flex-wrap items-center xl:justify-center border-b border-slate-400 py-2 bg-red-30">
           <div className="w-[20%] h-20 flex items-center justify-center text-center md:w-28 md:h-28 xl:w-32 xl:h-32 bg-red-70 ">
             <img src={ui_logo} className="xl:h-28 xl:aspect-squar xl:object-cover" />
           </div>
@@ -254,6 +261,10 @@ function App() {
             <p className="text-center text-sm text-slate-700 italic xl:text-left">
               ( per semester/session CGPA calculator )
             </p>
+          </div>
+          <div className="w-full space-y-1 mt-1">
+            <p className="text-sm text-center text-slate-700">Designed & Developed by <a href="https://olalekan-oladimeji-portfolio.vercel.app" className="text-blue-700 underline underline-offset-4 hover:text-red-400">Olalekan Oladimeji </a> </p>
+            <p className="text-sm text-center text-slate-600"><span>&#169; {new Date().getFullYear()}. </span> All Rights Reserved.</p>
           </div>
         </div>
 
@@ -275,6 +286,7 @@ function App() {
             </p>
           </div>
 
+          {/* input field for number of courses */}
           <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80">
             <input
               onChange={handleInputRender}
