@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.tw-all-center {
+  @apply flex items-center justify-center;
+}
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -30,6 +35,16 @@ body {
   transition: all .5s ease-in;
 }
 
+.scene {
+  perspective: 500px;
+  transform-style: preserve-3d;
+  transform-origin: bottom center;
+}
+
+.fall {
+transform: rotateY(60deg) ;
+}
+
 @keyframes slideInLeft {
   from {
     right: -50%;
@@ -37,5 +52,37 @@ body {
   }
   to {
     right: 0px;
+  }
+}
+
+.erase-left {
+  animation: eraseLeft .5s ease-out;
+  transition: all 1s ease-in;
+}
+.erase-right-hidden {
+  animation: eraseRightHidden .5s ease-out;
+  transition: all 1s ease-in;
+}
+
+@keyframes eraseRightHidden {
+  from {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-200px);
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes eraseLeft {
+  from {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(200px);
+    opacity: 0;
   }
 }

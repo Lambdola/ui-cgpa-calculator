@@ -1,15 +1,24 @@
+import { BadgePlus, Calculator } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-function ResultsHistory({ setSideNav, setInputValues }) {
+function ResultsHistory({ setSideNav, setInputValues, setScaleModal, scalePref }) {
   const [results, setResults] = useState("");
+  const [scale, setScale] = useState(0);
+  
 
   useEffect(() => {
-    let history = localStorage.getItem("CGPA");
-    if (history) {
-      history = JSON.parse(history);
-      setResults(history);
+    if (window && window.localStorage) {
+      let scalePref = localStorage.getItem("UI_CGPA_SCALE_PREFERENCE");
+      let history = localStorage.getItem("CGPA");
+      if (history) {
+        history = JSON.parse(history);
+        setResults(history);
+      }
+      if (scalePref) {
+        setScale(parseInt(scalePref));
+        // setScaleModal(false);
+      }
     }
-   
   }, []);
 
   return (
@@ -23,19 +32,39 @@ function ResultsHistory({ setSideNav, setInputValues }) {
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="absolute w-60 xl:w-1/3 h-full bg-white overflow-scroll"
+        className="absolute w-60 xl:w-1/3 xl:max-w-[300px] h-full bg-white overflow-scroll"
       >
         <button
           onClick={() => window.location.reload()}
           className="flex items-center gap-2 w-full my-5 mx-2"
         >
-          <div className="h-7 w-7 bg-slate-300 rounded-full"></div>
-          <p className="text-sm font-semibold">New CGPA Calculation</p>
+          <div className="h-7 w-7 bg-slate-700 rounded-full flex items-center justify-center">
+            <Calculator color="#ffffff" size={15} />
+          </div>
+          <p className="text-sm font-semibold">Start a new Calculation</p>
         </button>
+
+        <div className="w-full  shadow-md shadow-gray-400 border-t border-b border-gray-300 mx-3 p-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setScaleModal(true);
+            }}
+            className="text-left w-full rounded-lg"
+          >
+            <p className="text-sm font-semibold">Reset Grade Point Scale</p>
+            <p className="text-sm">
+              Grade Point Scale in Use:{" "}
+              <span className="font-semibold">{scalePref}</span>
+            </p>
+          </button>
+        </div>
 
         <div className="p-3 space-y-2">
           <div className="flex justify-between items-center">
-            <p className="text-sm xl:text-base font-medium object-cover">CGPA Results History</p>
+            <p className="text-sm xl:text-base font-medium object-cover">
+              CGPA Results History
+            </p>
             {results && (
               <button
                 onClick={() => {
@@ -53,6 +82,7 @@ function ResultsHistory({ setSideNav, setInputValues }) {
             results.map((items) => {
               return (
                 <div
+                  key={items[0]}
                   onClick={() => {
                     setSideNav(false);
                     setInputValues(items[1]);
@@ -65,7 +95,7 @@ function ResultsHistory({ setSideNav, setInputValues }) {
               );
             })
           ) : (
-            <p className="text-slate-400">No results</p>
+            <p className="text-slate-400">No History</p>
           )}
         </div>
       </div>
