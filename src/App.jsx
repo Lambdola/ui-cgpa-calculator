@@ -216,7 +216,7 @@ function App() {
       }
     }
     let cgpa = gpa / total_units;
-    cgpa = roundToTwo(cgpa).toFixed(2)
+    cgpa = roundToTwo(cgpa).toFixed(2);
     let text, degreeClass, rank;
     const firstClass = Number(scalePref) === 4 ? cgpa >= 3.5 : cgpa >= 4.5;
     const secondClassUpper =
@@ -470,7 +470,7 @@ function App() {
             />
           </div>
           <div className="mt-1 w-full md:w-[80%] xl:text-left">
-            <p className="text-lg  hidden md:block font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
+            <p className="text-lg hidden md:block font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
               UNIVERSITY OF IBADAN
             </p>
             <p className="text-center font-manrope text-slate-400 text-sm leading-5 md:text-lg md:mt-1 xl:text-2xl xl:text-left">
@@ -627,7 +627,7 @@ function App() {
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
-                 deleteInput={deleteInput}
+                deleteInput={deleteInput}
               />
             );
           })}
