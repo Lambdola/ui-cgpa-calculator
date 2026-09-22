@@ -478,7 +478,7 @@ function App() {
               of {scalePref ? scalePref : "4 or 5"} points.
             </p>
             <p className="text-center font-manrope text-sm text-slate-700 xl:text-left">
-              (per semester CGPA calculator)
+              (per semester GPA calculator)
             </p>
           </div>
           {/* desktop view */}
