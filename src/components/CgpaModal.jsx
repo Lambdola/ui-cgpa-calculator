@@ -39,7 +39,7 @@ function CgpaModal({ cgpaState, setCgpaState }) {
 
     if (results) {
       results = JSON.parse(results);
-      const existingLevelAndSemester = results.filter(
+      const existingLevelAndSemester = results.find(
         (result) =>
           String(result[4]) === String(level) &&
           String(result[5]) === String(semester),
