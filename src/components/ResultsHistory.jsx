@@ -188,7 +188,7 @@ function ResultsHistory({
                             <p hidden={lvl.toLowerCase() === "unsaved"} className="px-2 leading-0 text-[10px]">
                               {idx === 0 ? "1st" : "2nd"} semester{" "}
                             </p>
-                            <div className="px-2 w-full text-left rounded-md flex items-center gap-2 -mt-1">
+                            <div className="p-2 w-full text-left rounded-md flex items-center gap-2 -mt-1">
                               <div className="">
                                 <FileClock strokeWidth={2} size={15} />
                               </div>
