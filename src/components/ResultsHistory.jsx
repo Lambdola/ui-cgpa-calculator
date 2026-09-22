@@ -185,7 +185,7 @@ function ResultsHistory({
                       {levelsGroup[lvl].map((result, idx) => {
                         return (
                           <div key={result[3]}>
-                            <p className="px-2 leading-0 text-[10px]">
+                            <p hidden={lvl.toLowerCase() === "unsaved"} className="px-2 leading-0 text-[10px]">
                               {idx === 0 ? "1st" : "2nd"} semester{" "}
                             </p>
                             <div className="px-2 w-full text-left rounded-md flex items-center gap-2 -mt-1">
