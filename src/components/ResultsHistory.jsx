@@ -111,7 +111,7 @@ function ResultsHistory({
 
               <div className="flex items-center gap-2">
                 <span className="text-3xl font-bold leading-none  ">
-                  {cgpa}
+                  {isNaN(cgpa) ? "N/A" : cgpa}
                 </span>
               </div>
             </div>
