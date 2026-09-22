@@ -1,38 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.font-instrument-serif {
+  font-family: "Instrument Serif", serif;
+}
+.font-manrope {
+  font-family: "Manrope", sans-serif;
+}
 
 .tw-all-center {
   @apply flex items-center justify-center;
 }
 
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
-  body::-webkit-scrollbar{
-    display: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .slide-in-left {
-  animation: slideInLeft .2s ease-in;
-  transition: all .5s ease-in;
+  animation: slideInLeft 0.2s ease-in;
+  transition: all 0.5s ease-in;
 }
 
 .scene {
@@ -42,7 +51,7 @@ body {
 }
 
 .fall {
-transform: rotateY(60deg) ;
+  transform: rotateY(60deg);
 }
 
 @keyframes slideInLeft {
@@ -56,11 +65,11 @@ transform: rotateY(60deg) ;
 }
 
 .erase-left {
-  animation: eraseLeft .5s ease-out;
+  animation: eraseLeft 0.5s ease-out;
   transition: all 1s ease-in;
 }
 .erase-right-hidden {
-  animation: eraseRightHidden .5s ease-out;
+  animation: eraseRightHidden 0.5s ease-out;
   transition: all 1s ease-in;
 }
 

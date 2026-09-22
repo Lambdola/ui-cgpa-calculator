@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ui_logo from "./images/ui_logo.jpg";
 import CgpaModal from "./components/CgpaModal";
 import InputCourseCodeTrue from "./components/InputCourseCodeTrue";
 import InputCourseCodeFalse from "./components/InputCourseCodeFalse";
 import Header from "./components/Header";
 import ResultsHistory from "./components/ResultsHistory";
+import { Plus } from "lucide-react";
+import roundToTwo from "./utils/roundToTwo";
 
 function App() {
-  const [codeState, setCodeState] = useState(true);
+  const [codeState, setCodeState] = useState(false);
   const [inputValues, setInputValues] = useState([]);
   const [sideNav, setSideNav] = useState(false);
   const [scale, setScale] = useState(0);
@@ -20,6 +22,8 @@ function App() {
     state: false,
     text: "",
   });
+
+  const noOfCoursesRef = useRef(null);
 
   const scalePref = useMemo(() => {
     if (window && window.localStorage) {
@@ -34,6 +38,35 @@ function App() {
     }
     return null;
   }, [scaleModal]);
+
+  useEffect(() => {
+    // set a session id
+    const cgpa_calculation_session_id = localStorage.getItem(
+      "cgpa_calculation_session_id",
+    );
+    if (!cgpa_calculation_session_id) {
+      localStorage.setItem("cgpa_calculation_session_id", crypto.randomUUID());
+    }
+
+    const markedResults = localStorage.getItem("markedResults");
+
+    if (!markedResults || markedResults !== "yes") {
+      let results = localStorage.getItem("CGPA");
+
+      if (results) {
+        results = JSON.parse(results);
+        const _markedResults = results.map((result) => {
+          if (result.length === 3) {
+            return [...result, crypto.randomUUID()];
+          }
+          return result;
+        });
+
+        localStorage.setItem("CGPA", JSON.stringify(_markedResults));
+        localStorage.setItem("markedResults", "yes");
+      }
+    }
+  }, []);
 
   function handleInputRender(e) {
     let arr = [];
@@ -52,6 +85,8 @@ function App() {
       };
     }
     setInputValues(arr);
+    localStorage.removeItem("cgpa_calculation_session_id");
+    localStorage.setItem("cgpa_calculation_session_id", crypto.randomUUID());
     // e.target.value = ""
   }
 
@@ -108,6 +143,12 @@ function App() {
   }
 
   function handleInput(e) {
+    let cgpa_calculation_session_id = localStorage.getItem(
+      "cgpa_calculation_session_id",
+    );
+    if (cgpa_calculation_session_id) {
+      localStorage.removeItem("cgpa_calculation_session_id");
+    }
     // gets the properties of the input tag that triggered this function call
     let name = e.target.name;
     let val = e.target.value;
@@ -175,7 +216,7 @@ function App() {
       }
     }
     let cgpa = gpa / total_units;
-    cgpa = cgpa.toFixed(2);
+    cgpa = roundToTwo(cgpa).toFixed(2)
     let text, degreeClass, rank;
     const firstClass = Number(scalePref) === 4 ? cgpa >= 3.5 : cgpa >= 4.5;
     const secondClassUpper =
@@ -186,41 +227,77 @@ function App() {
     const pass = Number(scalePref) === 4 ? cgpa < 1.0 : cgpa >= 1;
     // const fail = Number(scalePref) === 4 ? cgpa < 1.0 : cgpa < 1;
     if (firstClass) {
-      text = "Excellence personified! You aren't just reaching for the stars; you're setting the pace. Keep that fire burning. Best Graduating Student (BGS) loading...";
+      text =
+        "Excellence personified! You aren't just reaching for the stars; you're setting the pace. Keep that fire burning. Best Graduating Student (BGS) loading...";
       degreeClass = "First Class Honours";
       rank = "";
     } else if (secondClassUpper) {
-      text = "You are within touching distance of greatness. One final push, one extra hour, one more milestone. You have the brilliance; now finish strong!";
+      text =
+        "You are within touching distance of greatness. One final push, one extra hour, one more milestone. You have the brilliance; now finish strong!";
       degreeClass = "Second Class Honours";
       rank = "(Upper Division)";
     } else if (secondClassLower) {
-      text = "Your journey is a marathon, not a sprint. Every effort counts, and your potential is still untapped. Don't relent now; the breakthrough is coming.";
+      text =
+        "Your journey is a marathon, not a sprint. Every effort counts, and your potential is still untapped. Don't relent now; the breakthrough is coming.";
       degreeClass = "Second Class Honours";
       rank = "(Lower Division)";
     } else if (thirdClass) {
-      text = "The comeback is always stronger than the setback. Refuse to be defined by a grade. Fight for every inch, because 'na who give up fuck up.' Dig deep!";
+      text =
+        "The comeback is always stronger than the setback. Refuse to be defined by a grade. Fight for every inch, because 'na who give up fuck up.' Dig deep!";
       degreeClass = "Third Class Honours";
       rank = "";
     } else if (pass) {
-      text = "You're still in the race, and as long as you're running, you can win. Steel your resolve. It’s time to show the world the heart of a survivor.";
+      text =
+        "You're still in the race, and as long as you're running, you can win. Steel your resolve. It’s time to show the world the heart of a survivor.";
       degreeClass = "Pass";
       rank = "";
     } else {
-      text = "The story isn't over yet. A fall is just a setup for a legendary rise. Dust yourself off, change the strategy, and go again. It’s not over until YOU win.";
+      text =
+        "The story isn't over yet. A fall is just a setup for a legendary rise. Dust yourself off, change the strategy, and go again. It’s not over until YOU win.";
       degreeClass = "Fail";
       rank = "";
     }
 
     // alert(JSON.stringify(inputValues))
+    let cgpa_calculation_session_id = localStorage.getItem(
+      "cgpa_calculation_session_id",
+    );
+
+    if (!cgpa_calculation_session_id) {
+      const id = crypto.randomUUID();
+      cgpa_calculation_session_id = id;
+      localStorage.setItem("cgpa_calculation_session_id", id);
+    }
+
     let results = localStorage.getItem("CGPA");
     let resultsArrHistory;
     if (results) {
       results = JSON.parse(results);
-      resultsArrHistory = [...results, [cgpa, inputValues, scalePref]];
+      const existingResult = results.find(
+        (result) => result[3] === cgpa_calculation_session_id,
+      );
+      if (existingResult) {
+        setCgpaState({
+          ...cgpaState,
+          cgpa: cgpa,
+          degreeClass: degreeClass,
+          rank: rank,
+          state: true,
+          text: text,
+        });
+        return;
+      }
+
+      resultsArrHistory = [
+        ...results,
+        [cgpa, inputValues, scalePref, cgpa_calculation_session_id],
+      ];
       localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory));
     } else {
       // alert("no")
-      resultsArrHistory = [[cgpa, inputValues, scalePref]];
+      resultsArrHistory = [
+        [cgpa, inputValues, scalePref, cgpa_calculation_session_id],
+      ];
       localStorage.setItem("CGPA", JSON.stringify(resultsArrHistory));
     }
 
@@ -246,14 +323,26 @@ function App() {
         color: "",
       },
     });
+    if (noOfCoursesRef && noOfCoursesRef.current) {
+      noOfCoursesRef.current.value = inputValues.length + 1;
+    }
     setInputValues(copyArr);
   }
 
   function deleteInput(id) {
-    alert(id);
     let filterValues = inputValues.filter((items) => items.id !== id);
-    alert(JSON.stringify(filterValues));
-    setInputValues(filterValues);
+    let mappedFilteredValues = filterValues.map((input, idx) => ({
+      ...input,
+      id: idx,
+    }));
+
+    if (noOfCoursesRef && noOfCoursesRef.current) {
+      noOfCoursesRef.current.value = mappedFilteredValues.length;
+    }
+
+    setInputValues(mappedFilteredValues);
+    localStorage.removeItem("cgpa_calculation_session_id");
+    localStorage.setItem("cgpa_calculation_session_id", crypto.randomUUID());
   }
 
   function setScaleState(val) {
@@ -277,15 +366,15 @@ function App() {
         <div className="absolute z-40 h-screen w-full bg-stone-200 tw-all-center p-5">
           <div className="space-y-5">
             <div>
-              <h2 className="font-medium  text-center md:text-lg">
+              <h2 className="font-bold font-instrument-serif text-center  md:text-lg">
                 Are you using a 4-point or a 5-point scale ?
               </h2>
               {scale !== 0 ? (
-                <p className="text-xs text-center text-gray-500 font-medium md:text-lg">
+                <p className="text-sm  font-instrument-serif text-center text-gray-500 font-medium md:text-lg">
                   Click again to show both options
                 </p>
               ) : (
-                <p className="text-xs text-center text-gray-500 font-medium md:text-lg">
+                <p className="text-sm  font-instrument-serif text-center text-gray-500 font-medium md:text-lg">
                   You can edit your choice later on
                 </p>
               )}
@@ -307,7 +396,7 @@ function App() {
                       <div className="w-3 h-3 rounded-full bg-black"></div>
                     </div>
                   </figure>
-                  <p className="p-1 text-sm  text-gray-800 font-bold rounded-full text-center">
+                  <p className="p-1  font-instrument-serif text-sm  text-gray-800 font-bold rounded-full text-center">
                     4-Point Scale
                   </p>
                 </button>
@@ -329,7 +418,7 @@ function App() {
                       <div className="w-3 h-3 rounded-full bg-black"></div>
                     </div>
                   </figure>
-                  <p className=" p-1 text-sm  text-gray-800 font-bold rounded-full text-center">
+                  <p className=" p-1  font-instrument-serif text-sm  text-gray-800 font-bold rounded-full text-center">
                     5-Point Scale
                   </p>
                 </button>
@@ -340,7 +429,7 @@ function App() {
             >
               <button
                 onClick={saveScale}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                className="bg-blue-500  font-instrument-serif text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
               >
                 Continue
               </button>
@@ -369,7 +458,7 @@ function App() {
       {/* main code body */}
       <div className="relative bg-yellow-30 p-3 pt-10 md:pt-16">
         {/* transparent background UI logo */}
-        <div className="opacity-10 -z-10 w-[80%] right-[10%] mx-auto bg-red-50 fixed top-[30vh] md:w-[60%] xl:w-[40%] md:right-[20%] xl:right-[30%] md:h-[50vh] xl:h-[70vh] md:top-[40vh] xl:top-[20vh] ">
+        <div className="opacity-5 -z-10 w-[80%] right-[10%] mx-auto bg-red-50 fixed top-[30vh] md:w-[60%] xl:w-[40%] md:right-[20%] xl:right-[30%] md:h-[50vh] xl:h-[70vh] md:top-[40vh] xl:top-[20vh] ">
           <img src={ui_logo} className="w-full h-full object-contain" />
         </div>
 
@@ -380,23 +469,24 @@ function App() {
               className="xl:h-28 xl:aspect-squar xl:object-cover"
             />
           </div>
-          <div className="bg-red-80 w-full md:w-[80%] xl:text-left">
-            <p className="text-lg hidden md:block font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
+          <div className="mt-1 w-full md:w-[80%] xl:text-left">
+            <p className="text-lg  hidden md:block font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
               UNIVERSITY OF IBADAN
             </p>
-            <p className="text-center text-slate-400 text-sm leading-normal md:text-lg md:mt-1 xl:text-2xl xl:text-left">
+            <p className="text-center font-manrope text-slate-400 text-sm leading-5 md:text-lg md:mt-1 xl:text-2xl xl:text-left">
               A University of Ibadan standard C.G.P.A calculator using a scale
               of {scalePref ? scalePref : "4 or 5"} points.
             </p>
-            <p className="text-center text-sm text-slate-700 italic xl:text-left">
-              ( per semester CGPA calculator )
+            <p className="text-center font-manrope text-sm text-slate-700 xl:text-left">
+              (per semester CGPA calculator)
             </p>
           </div>
+          {/* desktop view */}
           <div className="hidden md:block w-full space-y-1 mt-1">
-            <p className="text-sm text-center text-slate-500">
+            <p className="text-sm text-center text-slate-500 font-manrope">
               Designed & Developed by{" "}
               <a
-                href="https://olalekan-oladimeji-portfolio.vercel.app"
+                href="https://x.com/elijahdimeji549"
                 rel="noreferrer"
                 target="_blank"
                 className="text-blue-700 underline underline-offset-4 hover:text-red-400"
@@ -404,16 +494,17 @@ function App() {
                 Olalekan Oladimeji{" "}
               </a>{" "}
             </p>
-            <p className="text-sm text-center text-slate-600">
+            <p className="text-sm text-center text-slate-600 font-manrope">
               <span>&#169; {new Date().getFullYear()}. </span> All Rights
               Reserved.
             </p>
           </div>
-          <div className="md:hidden w-full space-y-1 mt-1">
+          {/* mobile view */}
+          <div className="md:hidden w-full space-y- mt-1">
             <p className="text-sm text-center text-slate-500">
               Developed by{" "}
               <a
-                href="https://olalekan-oladimeji-portfolio.vercel.app"
+                href="https://x.com/elijahdimeji549"
                 rel="noreferrer"
                 target="_blank"
                 className="text-blue-700 underline underline-offset-4 hover:text-red-400"
@@ -428,35 +519,41 @@ function App() {
           </div>
         </div>
 
+        {/* mobile view */}
         <div className="flex">
           <div className="xl:flex xl:flex-col xl:items-start bg-red-40 xl:w-[30%]">
-            <div className="flex items-center my-2 md:text-center md:mt-7">
-              {/* controls the "input course code" checkbox */}
-              <div className="bg-red-40 w-7 flex items-center justify-center">
-                <input
-                  type="checkbox"
-                  defaultChecked={true}
-                  onClick={() => setCodeState(!codeState)}
-                  className="w-5 h-5 border  md:h-6 md:w-6"
-                />
-              </div>
-
-              <p className="font-semibold bg-red-30 text-lg ml-3 md:text-2xl">
-                Input Course Code
-              </p>
-            </div>
-
             {/* input field for number of courses */}
-            <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80">
+            <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80 mt-2">
               <input
+                ref={noOfCoursesRef}
                 onChange={handleInputRender}
                 type="number"
-                placeholder="Total number of courses"
+                placeholder="Enter number of courses"
                 autoFocus
-                className="w-[80%] p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] font-medium placeholder:text-sm md:placeholder:text-xl md:w-full md:h-12 "
+                className="w-[80%] h-10 p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] placeholder:text-sm md:placeholder:text-xl md:w-full md:h-12"
               />
             </div>
+
+            {inputValues.length > 0 && (
+              <div className="flex items-center my-2 md:text-center md:mt-7">
+                {/* controls the "input course code" checkbox */}
+                <div className="bg-red-40 w-7 flex items-center justify-center">
+                  <input
+                    type="checkbox"
+                    checked={codeState}
+                    onChange={() => setCodeState(!codeState)}
+                    className="w-5 h-5 border  md:h-6 md:w-6"
+                  />
+                </div>
+
+                <p className="font-medium text-sm font-manrope ml-1 md:text-2xl">
+                  Show Course Code
+                </p>
+              </div>
+            )}
           </div>
+
+          {/* desktop */}
           <form
             onSubmit={handleSubmit}
             className="hidden xl:block xl:w-[70%] xl:h-screen xl:overflow-scroll space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
@@ -464,7 +561,7 @@ function App() {
             {inputValues.map((item) => {
               return codeState ? (
                 <InputCourseCodeTrue
-                  // key={item.id}
+                  key={item.id}
                   item={item}
                   handleInput={handleInput}
                   inputValues={inputValues}
@@ -472,10 +569,11 @@ function App() {
                 />
               ) : (
                 <InputCourseCodeFalse
+                  key={item.id}
                   item={item}
                   handleInput={handleInput}
                   inputValues={inputValues}
-                  setInputValues={setInputValues}
+                  deleteInput={deleteInput}
                 />
               );
             })}
@@ -509,6 +607,7 @@ function App() {
           </form>
         </div>
 
+        {/* mobile */}
         <form
           onSubmit={handleSubmit}
           className=" xl:hidden space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
@@ -516,7 +615,7 @@ function App() {
           {inputValues.map((item) => {
             return codeState ? (
               <InputCourseCodeTrue
-                // key={item.id}
+                key={item.id}
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
@@ -524,21 +623,20 @@ function App() {
               />
             ) : (
               <InputCourseCodeFalse
+                key={item.id}
                 item={item}
                 handleInput={handleInput}
                 inputValues={inputValues}
-                setInputValues={setInputValues}
+                 deleteInput={deleteInput}
               />
             );
           })}
 
           {inputValues.length !== 0 && (
             <button type="button" onClick={handleAddMoreCourses}>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 my-3 font-manrope">
                 <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
-                  <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
-                    +
-                  </p>
+                  <Plus color="#1e40af" />
                 </div>
                 <p className="text-sm text-blue-500 font-bold">
                   Add another course
@@ -552,7 +650,7 @@ function App() {
             <div className="bg-red-800 rounded-xl w-40 xl:w-80 mx-auto">
               <button
                 type="submit"
-                className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-20 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700"
+                className="font-manrope relative w-40 xl:w-56 bg-blue-500 font-bold h-12 xl:h-20 mx-auto xl:text-2xl rounded-xl text-white hover:bg-blue-700"
               >
                 Calculate CGPA
               </button>
