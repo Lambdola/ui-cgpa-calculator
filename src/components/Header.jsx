@@ -1,4 +1,4 @@
-import React from "react";
+import ui_logo from "../images/ui_logo.jpg";
 
 function Header({ setSideNav }) {
   return (
@@ -18,8 +18,11 @@ function Header({ setSideNav }) {
           onClick={() => {
             window.location.reload();
           }}
-          className="font-mono font-bold text-base xl:text-2xl cursor-pointer  font-instrument-serif"
+          className="font-mono font-bold text-base xl:text-2xl cursor-pointer  font-instrument-serif flex items-center gap-1"
         >
+          <figure className="h-6 w-6 md:h-8 md:w-8">
+            <img src={ui_logo} className="h-full w-full object-contain" />
+          </figure>
           <p>UI CGPA Calculator</p>
         </div>
         <div className="h-10 w-10 bg-transparent rounded-full"></div>

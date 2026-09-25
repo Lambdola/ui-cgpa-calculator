@@ -3,7 +3,7 @@ import { Trash2, X } from "lucide-react";
 function InputCourseCodeTrue({ item, handleInput, deleteInput }) {
   if (item) {
     return (
-      <div className="font-manrope relative flex flex-wrap w-full justify-between even:bg-[rgba(185,170,170,0.25)] pt-2 pb-2 rounded-lg">
+      <div className="font-manrope relative flex flex-wrap w-full justify-between even:bg-[rgba(185,170,170,0.25)] pt-2 pb-2 rounded-lg p-2">
         <div className="flex flex-col items-center mt-1">
           <p className="font-bold text-sm bg-red-20 md:text-lg text-center">
             {item.id + 1}.
@@ -50,7 +50,7 @@ function InputCourseCodeTrue({ item, handleInput, deleteInput }) {
             autoComplete="off"
             onChange={handleInput}
             value={item.unit}
-            type="text"
+            type="number"
             placeholder="2"
             className="p-2 border border-teal-500 w-full appearance-none rounded md:h-12 md:text-xl"
           />
@@ -68,7 +68,7 @@ function InputCourseCodeTrue({ item, handleInput, deleteInput }) {
             autoComplete="off"
             onChange={handleInput}
             value={item.grade}
-            type="text"
+             type="number"
             placeholder="79"
             className="p-2 border border-teal-500 w-full rounded md:h-12 md:text-xl"
           />

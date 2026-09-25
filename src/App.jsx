@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ui_logo from "./images/ui_logo.jpg";
+import naruto from "./images/naruto.jfif";
 import CgpaModal from "./components/CgpaModal";
 import InputCourseCodeTrue from "./components/InputCourseCodeTrue";
 import InputCourseCodeFalse from "./components/InputCourseCodeFalse";
 import Header from "./components/Header";
 import ResultsHistory from "./components/ResultsHistory";
-import { Plus } from "lucide-react";
+import { Hourglass, Plus } from "lucide-react";
 import roundToTwo from "./utils/roundToTwo";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
     state: false,
     text: "",
   });
+  const [noOfCourses, setNoOfCourses] = useState("");
 
   const noOfCoursesRef = useRef(null);
 
@@ -70,8 +72,14 @@ function App() {
 
   function handleInputRender(e) {
     let arr = [];
-    let val = e.target.value;
-    arr.length = val;
+    let val = e.target.value.trim();
+    if (isNaN(Number(val)) || !Number(val)) {
+      setNoOfCourses("");
+      setInputValues([]);
+      return;
+    }
+
+    arr.length = Number(val);
     for (let i = 0; i < arr.length; i++) {
       arr[i] = {
         id: i,
@@ -85,6 +93,7 @@ function App() {
       };
     }
     setInputValues(arr);
+    setNoOfCourses(val);
     localStorage.removeItem("cgpa_calculation_session_id");
     localStorage.setItem("cgpa_calculation_session_id", crypto.randomUUID());
     // e.target.value = ""
@@ -206,11 +215,11 @@ function App() {
     let total_units = 0;
     let gpa = 0;
     for (let items of inputValues) {
-      // alert(items)
       total_units += parseInt(items.unit);
       let degree = evaluateGrade(items.id, items.grade);
       if (degree < 0) {
-        alert("Ooops");
+        alert("Seems you filled the courses wrong");
+        return;
       } else {
         gpa += degree * parseInt(items.unit);
       }
@@ -325,6 +334,7 @@ function App() {
     });
     if (noOfCoursesRef && noOfCoursesRef.current) {
       noOfCoursesRef.current.value = inputValues.length + 1;
+      setNoOfCourses(String(inputValues.length + 1));
     }
     setInputValues(copyArr);
   }
@@ -337,7 +347,15 @@ function App() {
     }));
 
     if (noOfCoursesRef && noOfCoursesRef.current) {
-      noOfCoursesRef.current.value = mappedFilteredValues.length;
+      const length = mappedFilteredValues.length;
+      noOfCoursesRef.current.value = length;
+      if (length === 0) {
+        setNoOfCourses("");
+        setInputValues([]);
+        return;
+      }
+
+      setNoOfCourses(String(length));
     }
 
     setInputValues(mappedFilteredValues);
@@ -361,7 +379,7 @@ function App() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative h-screen w-full overflow-hidden">
       {scaleModal && (
         <div className="absolute z-40 h-screen w-full bg-stone-200 tw-all-center p-5">
           <div className="space-y-5">
@@ -456,33 +474,28 @@ function App() {
       )}
 
       {/* main code body */}
-      <div className="relative bg-yellow-30 p-3 pt-10 md:pt-16">
+      <div className="relative p-3 h-full pt-10 md:pt-10 overflow-auto md:overflow-hidden">
         {/* transparent background UI logo */}
         <div className="opacity-5 -z-10 w-[80%] right-[10%] mx-auto bg-red-50 fixed top-[30vh] md:w-[60%] xl:w-[40%] md:right-[20%] xl:right-[30%] md:h-[50vh] xl:h-[70vh] md:top-[40vh] xl:top-[20vh] ">
           <img src={ui_logo} className="w-full h-full object-contain" />
         </div>
 
-        <div className="flex flex-wrap items-center xl:justify-center border-b border-slate-400 py-2 bg-red-30">
-          <div className="w-[20%] h-20 items-center justify-center text-center hidden md:flex md:w-28 md:h-28 xl:w-32 xl:h-32 bg-red-70 ">
-            <img
-              src={ui_logo}
-              className="xl:h-28 xl:aspect-squar xl:object-cover"
-            />
-          </div>
-          <div className="mt-1 w-full md:w-[80%] xl:text-left">
-            <p className="text-lg hidden md:block font-bold font-sans text-center md:text-4xl md:mt-7 xl:mt-0 xl:text-left">
+        {/* desktop sub-header */}
+        <div className="hidden md:block items-center justify-center py-2">
+          <div className=" w-full md:w-[80%] mx-auto">
+            <p className=" font-bold font-instrument-serif text-center text-4xl">
               UNIVERSITY OF IBADAN
             </p>
-            <p className="text-center font-manrope text-slate-400 text-sm leading-5 md:text-lg md:mt-1 xl:text-2xl xl:text-left">
+            <p className="text-center font-manrope text-slate-700 text-sm leading-5 font-manrope">
               A University of Ibadan standard C.G.P.A calculator using a scale
               of {scalePref ? scalePref : "4 or 5"} points.
             </p>
-            <p className="text-center font-manrope text-sm text-slate-700 xl:text-left">
+            <p className="text-center font-manrope text-sm text-slate-500">
               (per semester GPA calculator)
             </p>
           </div>
-          {/* desktop view */}
-          <div className="hidden md:block w-full space-y-1 mt-1">
+
+          <div className="">
             <p className="text-sm text-center text-slate-500 font-manrope">
               Designed & Developed by{" "}
               <a
@@ -495,11 +508,24 @@ function App() {
               </a>{" "}
             </p>
             <p className="text-sm text-center text-slate-600 font-manrope">
-              <span>&#169; {new Date().getFullYear()}. </span> All Rights
+              <span>&#169; 2023 - {new Date().getFullYear()}. </span> All Rights
               Reserved.
             </p>
           </div>
-          {/* mobile view */}
+        </div>
+
+        {/* mobile sub-header */}
+        <div className="md:hidden flex flex-wrap items-center justify-center py-2 bg-red-30">
+          <div className="">
+            <p className="text-center font-manrope text-slate-700 text-sm leading-5 md:text-lg md:mt-1 xl:text-2xl xl:text-left">
+              A University of Ibadan standard C.G.P.A calculator using a scale
+              of {scalePref ? scalePref : "4 or 5"} points.
+            </p>
+            <p className="text-center font-manrope text-sm text-slate-500 xl:text-left">
+              (per semester GPA calculator)
+            </p>
+          </div>
+
           <div className="md:hidden w-full space-y- mt-1">
             <p className="text-sm text-center text-slate-500">
               Developed by{" "}
@@ -513,29 +539,170 @@ function App() {
               </a>{" "}
             </p>
             <p className="text-sm text-center text-slate-600">
-              <span>&#169; {new Date().getFullYear()}. </span> All Rights
+              <span>&#169; 2023 - {new Date().getFullYear()}. </span> All Rights
               Reserved.
             </p>
           </div>
         </div>
 
-        {/* mobile view */}
-        <div className="flex">
-          <div className="xl:flex xl:flex-col xl:items-start bg-red-40 xl:w-[30%]">
-            {/* input field for number of courses */}
-            <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80 mt-2">
+        {/* desktop courses list */}
+        <div className="h-[calc(100%-100px)] items-start gap-10 md:max-lg:gap-5 hidden md:flex max-w-[1280px] mx-auto">
+          {/* input field for number of courses */}
+          <aside className="w-[40%] max-w-[300px]">
+            <div className="w-full">
               <input
                 ref={noOfCoursesRef}
                 onChange={handleInputRender}
-                type="number"
+                value={noOfCourses}
                 placeholder="Enter number of courses"
                 autoFocus
-                className="w-[80%] h-10 p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] placeholder:text-sm md:placeholder:text-xl md:w-full md:h-12"
+                className="w-full appearance-none outline-none h-10 p-2 rounded-md text-lg md:text-2xl border border-stone-400 bg-[rgba(194,192,213,0.3)] placeholder:text-lg font-manrope"
               />
             </div>
 
             {inputValues.length > 0 && (
-              <div className="flex items-center my-2 md:text-center md:mt-7">
+              <div className="flex items-center my-2 md:text-center md:mt-2">
+                {/* controls the "input course code" checkbox */}
+                <div className="flex items-center justify-center">
+                  <input
+                    type="checkbox"
+                    checked={codeState}
+                    onChange={() => setCodeState(!codeState)}
+                    className="w-5 h-5 md:max-lg:w-4 md:max-lg:h-4 border cursor-pointer"
+                  />
+                </div>
+
+                <p className="font-medium font-manrope ml-1 md:max-lg:ml-0.5 text-xl md:max-lg:text-sm">
+                  Show Course Code
+                </p>
+              </div>
+            )}
+
+            {inputValues.length !== 0 && (
+              <button type="button" onClick={handleAddMoreCourses}>
+                <div className="flex items-center gap-1 mt-5">
+                  <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
+                    <Plus color="#1e40af" size={20} />
+                  </div>
+                  <p className="text-lg text-blue-500 font-bold font-manrope  md:max-lg:text-sm">
+                    Add another course
+                  </p>
+                </div>
+              </button>
+            )}
+
+            {inputValues.length !== 0 && (
+              <div className="bg-red-30 rounded-xl w-40 xl:w-full mx-auto">
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-16 xl:mt-5 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700 font-manrope"
+                >
+                  Calculate CGPA
+                </button>
+              </div>
+            )}
+          </aside>
+
+          {/* course list desktop */}
+          <form
+            onSubmit={handleSubmit}
+            className="h-full overflow-auto no-scrollbar w-full pb-10"
+          >
+            {inputValues.length > 0 &&
+              inputValues.map((item) => {
+                return codeState ? (
+                  <InputCourseCodeTrue
+                    key={item.id}
+                    item={item}
+                    handleInput={handleInput}
+                    inputValues={inputValues}
+                    deleteInput={deleteInput}
+                  />
+                ) : (
+                  <InputCourseCodeFalse
+                    key={item.id}
+                    item={item}
+                    handleInput={handleInput}
+                    inputValues={inputValues}
+                    deleteInput={deleteInput}
+                  />
+                );
+              })}
+
+            {inputValues.length === 0 && (
+              <div className="size-full bg-stone-200/80 h-full tw-all-center">
+                <div className="tw-all-center flex-col animate-pulse">
+                  <Hourglass size={40} />
+                  <p>Waiting for your input</p>
+                </div>
+              </div>
+            )}
+          </form>
+
+          <aside className="font-manrope md:max-lg:max-w-[250px] max-w-[300px]">
+            <p className="font-bold text-xl">Are you an anime lover ?</p>
+
+            <p>
+              If no, try to watch{" "}
+              <a
+                href="https://animepahe.pw/anime/a52b33da-140d-4047-7f25-4dac253bc538"
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline italic"
+              >
+                Death note
+              </a>{" "}
+              as your first anime. If yes, rewatch{" "}
+              <a
+                href="https://animepahe.pw/anime/4420c9ee-ae49-75ed-cc96-cbf524915b10"
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline italic"
+              >
+                AOT
+              </a>{" "}
+              again.
+            </p>
+
+            <figure
+              style={{
+                backgroundImage: `url(${naruto})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+              }}
+              className="h-40 w-full rounded-md"
+            >
+              {/* <img src={naruto} className="w-full h-full object-contain" /> */}
+            </figure>
+
+            <p className="text-sm">
+              This is not an ad. This is just me, misusing this platform to
+              force more people to watch anime 😁😁😁. I also updated the user
+              interface for you as a bribe for putting this banner here. Thanks
+              for using this tool. It means alot
+            </p>
+          </aside>
+        </div>
+
+        {/* mobile courses list */}
+        <div className="md:hidden">
+          {/* input field for number of courses */}
+          <div className="">
+            <div className="md:w-[50%] md:mx-auto xl:mx-0 xl:w-full bg-red-80 mt-2">
+              <input
+                ref={noOfCoursesRef}
+                onChange={handleInputRender}
+                value={noOfCourses}
+                placeholder="Enter number of courses"
+                autoFocus
+                type="number"
+                className="w-[80%] appearance-none outline-none h-10 p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] placeholder:text-sm md:placeholder:text-xl md:w-full md:h-12"
+              />
+            </div>
+
+            {inputValues.length > 0 && (
+              <div className="flex items-center my-2 md:text-center md:mt-2">
                 {/* controls the "input course code" checkbox */}
                 <div className="bg-red-40 w-7 flex items-center justify-center">
                   <input
@@ -553,10 +720,9 @@ function App() {
             )}
           </div>
 
-          {/* desktop */}
           <form
             onSubmit={handleSubmit}
-            className="hidden xl:block xl:w-[70%] xl:h-screen xl:overflow-scroll space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
+            className="space-y-1 lg:overflow-auto overflow-scroll mt-3 no-scrollbar"
           >
             {inputValues.map((item) => {
               return codeState ? (
@@ -580,25 +746,23 @@ function App() {
 
             {inputValues.length !== 0 && (
               <button type="button" onClick={handleAddMoreCourses}>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 my-3 font-manrope">
                   <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
-                    <p className="text-2xl font-bold flex bg-red-60 items-center justify-center text-blue-800">
-                      +
-                    </p>
+                    <Plus color="#1e40af" />
                   </div>
-                  <p className="text-sm xl:text-xl text-blue-500 font-bold">
+                  <p className="text-sm text-blue-500 font-bold">
                     Add another course
                   </p>
                 </div>
               </button>
             )}
 
-            {/* only show the "calculate CGPA button" if there are rendered fields */}
+            {/* only show the "calculate CGPA button" if there are rendered course fields */}
             {inputValues.length !== 0 && (
-              <div className="bg-red-30 rounded-xl w-40 xl:w-full mx-auto">
+              <div className="bg-red-800 rounded-xl w-40 xl:w-80 mx-auto">
                 <button
                   type="submit"
-                  className="relative w-40 xl:w-56 bg-blue-500 font-bold h-16 xl:h-16 xl:mt-5 mx-auto text-lg xl:text-2xl rounded-xl text-white hover:bg-blue-700"
+                  className="font-manrope relative w-40 xl:w-56 bg-blue-500 font-bold h-12 xl:h-20 mx-auto xl:text-2xl rounded-xl text-white hover:bg-blue-700"
                 >
                   Calculate CGPA
                 </button>
@@ -606,57 +770,6 @@ function App() {
             )}
           </form>
         </div>
-
-        {/* mobile */}
-        <form
-          onSubmit={handleSubmit}
-          className=" xl:hidden space-y-1 bg-red-40 h-[60vh lg:h-auto lg:overflow-auto overflow-scroll mt-3 md:w-[90%] md:mx-auto no-scrollbar"
-        >
-          {inputValues.map((item) => {
-            return codeState ? (
-              <InputCourseCodeTrue
-                key={item.id}
-                item={item}
-                handleInput={handleInput}
-                inputValues={inputValues}
-                deleteInput={deleteInput}
-              />
-            ) : (
-              <InputCourseCodeFalse
-                key={item.id}
-                item={item}
-                handleInput={handleInput}
-                inputValues={inputValues}
-                deleteInput={deleteInput}
-              />
-            );
-          })}
-
-          {inputValues.length !== 0 && (
-            <button type="button" onClick={handleAddMoreCourses}>
-              <div className="flex items-center gap-1 my-3 font-manrope">
-                <div className="h-5 w-5 bg-red-40 flex items-center justify-center">
-                  <Plus color="#1e40af" />
-                </div>
-                <p className="text-sm text-blue-500 font-bold">
-                  Add another course
-                </p>
-              </div>
-            </button>
-          )}
-
-          {/* only show the "calculate CGPA button" if there are rendered course fields */}
-          {inputValues.length !== 0 && (
-            <div className="bg-red-800 rounded-xl w-40 xl:w-80 mx-auto">
-              <button
-                type="submit"
-                className="font-manrope relative w-40 xl:w-56 bg-blue-500 font-bold h-12 xl:h-20 mx-auto xl:text-2xl rounded-xl text-white hover:bg-blue-700"
-              >
-                Calculate CGPA
-              </button>
-            </div>
-          )}
-        </form>
       </div>
     </div>
   );

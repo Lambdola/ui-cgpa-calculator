@@ -76,15 +76,15 @@ function CgpaModal({ cgpaState, setCgpaState }) {
 
   if (saveResult) {
     return (
-      <div className="fixed font-manrope z-30 w-full h-screen bg-white slide-in-lef p-3">
-        <div>
-          <p className="font-medium text-lg">
+      <div className="fixed flex flex-col items-center justify-center font-manrope z-30 w-full h-screen bg-white slide-in-lef p-3">
+        <div className="text-center max-w-[500px]">
+          <p className="font-medium text-lg md:font-bold md:text-2xl">
             Save Result as a semester result
           </p>
           <p className="text-sm">
             Select your level and semester to save this result
           </p>
-          <p className="text-red-400 text-xs">
+          <p className="text-red-400 text-xs md:text-base">
             *Calculation history is saved locally on your device. Your data will
             not persist across different browsers or devices.
           </p>
@@ -145,18 +145,19 @@ function CgpaModal({ cgpaState, setCgpaState }) {
               minLength={3}
               placeholder="e.g. 100, 200, 300, 400"
               autoFocus
+              type="number"
               className="w-[80%] h-10 p-2 rounded-md text-lg md:text-2xl border-2 border-blue-300 bg-[rgba(194,192,213,0.3)] placeholder:text-sm md:placeholder:text-xl md:w-full md:h-12"
             />
           </div>
         </div>
 
-        <div onClick={_saveResult}>
-          <button className="bg-black text-white my-2 py-2 text-center rounded-md w-full tw-all-center mt-5">
+        <div onClick={_saveResult} className="w-full md:max-w-[500px]">
+          <button className="bg-black md:w-full text-white my-2 py-2 text-center rounded-md w-full tw-all-center mt-5">
             Save result
           </button>
         </div>
-        <div onClick={closeCGPAModal}>
-          <button className="border border-red-500 text-red-500 my-2 py-2 text-center rounded-md w-full tw-all-center mt-2">
+        <div onClick={closeCGPAModal} className="w-full md:max-w-[500px]">
+          <button className="md:w-full border border-red-500 text-red-500 my-2 py-2 text-center rounded-md w-full tw-all-center mt-2">
             Cancel
           </button>
         </div>
@@ -166,7 +167,7 @@ function CgpaModal({ cgpaState, setCgpaState }) {
   return (
     <div onClick={closeCGPAModal}>
       <div className="fixed top-0 bottom-0 z-10 w-full h-full bg-[rgba(77,73,73,1)] tw-all-center font-manrope">
-        <div className="relative max-w-[90vw] lg:max-w-[30vw] space-y-3">
+        <div className="relative max-w-[90vw] lg:max-w-[30vw] space-y-5">
           <div className="text-center text-white space-y-7 bg-[rgba(24,23,54,0.8)] border border-gray-800 rounded-lg  p-3 md:p-10 xl:p-8 shadow-md shadow-gray-900 bg-red-20">
             <div>
               <p className="font-medium text-lg xl:text-xl text-gray-400 font-instrument-serif">

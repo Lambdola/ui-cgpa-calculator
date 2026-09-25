@@ -97,7 +97,7 @@ function ResultsHistory({
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="space-y-2 absolute max-w-[70%] xl:w-1/3 xl:max-w-[300px] h-full bg-white overflow-scroll p-2"
+        className="space-y-2 absolute max-w-[70%] xl:w-1/3 xl:max-w-[300px] h-full bg-white overflow-scroll no-scrollbar p-2"
       >
         {/* CGPA Banner */}
         <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#193b78] to-[#102f65] px-4 py-3 text-white">
@@ -105,7 +105,7 @@ function ResultsHistory({
             <GraduationCap className="h-9 w-9 shrink-0" />
 
             <div>
-              <p className="text-xs text-white/80 font-instrument-serif ">
+              <p className="text-xs md:text-base text-white/80 font-instrument-serif ">
                 Your CGPA is
               </p>
 
@@ -124,7 +124,7 @@ function ResultsHistory({
         <div>
           <button
             onClick={() => window.location.reload()}
-            className="flex items-start text-left gap-2 bg-slate-700 p-2 rounded-md text-white"
+            className="flex w-full items-start text-left gap-2 bg-slate-700 p-2 rounded-md text-white"
           >
             <div className=" bg-slate-700 rounded-full flex items-center justify-center">
               <Calculator color="#ffffff" size={15} />
@@ -140,7 +140,7 @@ function ResultsHistory({
               e.stopPropagation();
               setScaleModal(true);
             }}
-            className="flex items-start text-left gap-2 bg-blue-200/20 border p-2 rounded-md"
+            className="flex w-full items-start text-left gap-2 bg-blue-200/20 border p-2 rounded-md"
           >
             <div className=" rounded-full flex items-center justify-center">
               <RefreshCcw size={15} />

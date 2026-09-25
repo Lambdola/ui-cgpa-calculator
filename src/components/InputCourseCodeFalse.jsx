@@ -5,7 +5,7 @@ function InputCourseCodeFalse({ item, handleInput, deleteInput }) {
   return (
     <div
       key={item.id + "2"}
-      className="font-manrope relative flex flex-wrap w-full justify-between bg-red-20 even:bg-[rgba(185,170,170,0.25)] pt-2 pb-2 rounded-lg"
+      className="font-manrope relative flex flex-wrap w-full justify-between bg-red-20 even:bg-[rgba(185,170,170,0.25)] pt-2 pb-2 rounded-lg p-2"
     >
       <div className="flex flex-col items-center mt-1">
         <p className="font-bold text-sm bg-red-20 md:text-lg text-center">
@@ -34,7 +34,7 @@ function InputCourseCodeFalse({ item, handleInput, deleteInput }) {
           autoComplete="off"
           onChange={handleInput}
           value={item.unit}
-          type="text"
+          type="number"
           placeholder="2"
           className="p-2 border border-teal-500 w-full appearance-none rounded md:h-12 md:text-xl"
         />
@@ -52,7 +52,7 @@ function InputCourseCodeFalse({ item, handleInput, deleteInput }) {
           autoComplete="off"
           onChange={handleInput}
           value={item.grade}
-          type="text"
+           type="number"
           placeholder="79"
           className="p-2 border border-teal-500 w-full rounded md:h-12 md:text-xl"
         />
