@@ -81,14 +81,12 @@ function InputCourseCodeTrue({ item, handleInput, deleteInput }) {
             id={item.id}
             name={item.id + ",aggregate"}
             onChange={handleInput}
-            className={`text-4xl text-center lg:text-left md:text-5xl font-bold w-full mt-3  ${item.aggregate.color || "text-stone-300"}`}
+            className={`text-4xl pl-2 lg:text-left md:text-5xl font-bold w-full mt-3  ${item.aggregate.color || "text-stone-300"}`}
           >
             {item.aggregate.value || "?"}
           </p>
         </div>
-        {/* <div className='w-full'>
-          < button className='text-red-600 font-semibold text-center bg-red-40 p-1 hover:bg-red-600 hover:text-white rounded  m-2'>DELETE</button>
-        </div> */}
+      
       </div>
     );
   }

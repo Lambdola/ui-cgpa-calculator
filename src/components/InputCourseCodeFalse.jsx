@@ -65,15 +65,13 @@ function InputCourseCodeFalse({ item, handleInput, deleteInput }) {
           id={item.id}
           name={item.id + ",aggregate"}
           onChange={handleInput}
-          className={`text-4xl text-center md:text-5xl lg:text-left font-bold w-full mt-3 md:mt-3  ${item.aggregate.color || "text-stone-300"}`}
+          className={` text-4xl pl-2 md:text-5xl lg:text-left font-bold w-full mt-3 md:mt-3  ${item.aggregate.color || "text-stone-300"}`}
         >
           
             {item.aggregate.value || "?"}
         </p>
       </div>
-      {/* <div className='w-full'>
-          <p className='text-red-600 font-semibold text-center bg-red-40 p-1 hover:bg-red-600 hover:text-white rounded  m-2'>DELETE</p>
-        </div> */}
+     
     </div>
   );
 }
